@@ -16,11 +16,27 @@ let = { "let" }
 in = { "in" }
 
 // Operators.
+binop = _{ plus | times | le | eq }
 plus = { "+" }
 times = { "*" }
 le = { "<=" }
 eq = { "=" }
 
-// Parentheses
+// Parentheses.
 lparen = { "(" }
 rparen = { ")" }
+
+// Syntax.
+prog = { SOI ~ expr ~ EOI }
+expr = {
+    (
+        int
+        | id
+        | true
+        | false
+        | let ~ id ~ eq ~ expr ~ in ~ expr
+        | if ~ expr ~ then ~ expr ~ else ~ expr
+        | lparen ~ expr ~ rparen
+    ) ~ expr2
+}
+expr2 = { binop ~ expr ~ expr2 }
