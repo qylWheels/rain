@@ -1,0 +1,26 @@
+WHITESPACE = _{ " " | "\t" }
+
+// Trival lexical elements.
+digit = @{ ASCII_DIGIT }
+int = @{ "-"? ~ digit+ }
+letter = @{ ASCII_ALPHA }
+id = @{ letter+ }
+
+// Keywords.
+if = { "if" }
+then = { "then" }
+else = { "else" }
+true = { "true" }
+false = { "false" }
+let = { "let" }
+in = { "in" }
+
+// Operators.
+plus = { "+" }
+times = { "*" }
+le = { "<=" }
+eq = { "=" }
+
+// Parentheses
+lparen = { "(" }
+rparen = { ")" }
