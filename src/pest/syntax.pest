@@ -1,19 +1,17 @@
 WHITESPACE = _{ " " | "\t" }
 
 // Trival lexical elements.
-digit = @{ ASCII_DIGIT }
-int = @{ "-"? ~ digit+ }
-letter = @{ ASCII_ALPHA }
-id = @{ letter+ }
+int = @{ "-"? ~ ASCII_DIGIT+ }
+id = @{ ASCII_ALPHA+ }
 
 // Keywords.
 if = { "if" }
-then = { "then" }
-else = { "else" }
+then = _{ "then" }
+else = _{ "else" }
 true = { "true" }
 false = { "false" }
 let = { "let" }
-in = { "in" }
+in = _{ "in" }
 
 // Operators.
 binop = _{ plus | times | le | eq }
@@ -23,20 +21,20 @@ le = { "<=" }
 eq = { "=" }
 
 // Parentheses.
-lparen = { "(" }
-rparen = { ")" }
+lparen = _{ "(" }
+rparen = _{ ")" }
 
 // Syntax.
-prog = { SOI ~ expr ~ EOI }
-expr = {
+prog = _{ SOI ~ expr ~ EOI }
+expr = _{
     (
         int
-        | id
         | true
         | false
         | let ~ id ~ eq ~ expr ~ in ~ expr
         | if ~ expr ~ then ~ expr ~ else ~ expr
+        | id
         | lparen ~ expr ~ rparen
     ) ~ expr2
 }
-expr2 = { binop ~ expr ~ expr2 }
+expr2 = _{ binop ~ expr ~ expr2 | "" }
