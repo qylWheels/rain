@@ -25,7 +25,7 @@ lparen = _{ "(" }
 rparen = _{ ")" }
 
 // Syntax.
-prog = _{ SOI ~ expr ~ EOI }
+prog = { SOI ~ expr ~ EOI }
 expr = _{
     (
         int
