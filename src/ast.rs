@@ -9,7 +9,6 @@ pub enum BinOp {
     Plus,
     Times,
     Le,
-    Eq,
 }
 
 #[derive(Clone, Debug)]
