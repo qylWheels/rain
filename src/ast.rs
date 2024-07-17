@@ -1,9 +1,3 @@
-use pest_derive::Parser;
-
-#[derive(Parser)]
-#[grammar = "pest/syntax.pest"]
-pub struct RainParser;
-
 #[derive(Clone, Copy, Debug)]
 pub enum BinOp {
     Plus,
