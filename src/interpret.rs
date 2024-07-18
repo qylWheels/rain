@@ -76,7 +76,8 @@ impl Interpreter {
 
     fn eval_let(&mut self, x: &str, e1: &Expr, e2: &Expr) -> Result<Expr, InterpretError> {
         let v1 = self.eval(e1)?;
-        Ok(self.substitute(e2, &v1, x)?)
+        let expr = self.substitute(e2, &v1, x)?;
+        self.eval(&expr)
     }
 
     fn eval_if(&mut self, guard: &Expr, e1: &Expr, e2: &Expr) -> Result<Expr, InterpretError> {
