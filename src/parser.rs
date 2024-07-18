@@ -1,11 +1,6 @@
-use std::f64::INFINITY;
-
 use crate::ast::{BinOp, Expr};
 use lazy_static::lazy_static;
-use pest::{
-    iterators::{Pair, Pairs},
-    pratt_parser::PrattParser,
-};
+use pest::{iterators::Pairs, pratt_parser::PrattParser};
 use pest_derive::Parser;
 
 lazy_static! {
