@@ -1,40 +1,43 @@
-WHITESPACE = _{ " " | "\t" }
+WHITESPACE = _{ WHITE_SPACE }
 
 // Trival lexical elements.
 int = @{ "-"? ~ ASCII_DIGIT+ }
 id = @{ ASCII_ALPHA+ }
 
 // Keywords.
-if = { "if" }
+if = _{ "if" }
 then = _{ "then" }
 else = _{ "else" }
 true = { "true" }
 false = { "false" }
-let = { "let" }
+let = _{ "let" }
 in = _{ "in" }
 
 // Operators.
-binop = _{ plus | times | le | eq }
+binop = _{ plus | times | le }
 plus = { "+" }
 times = { "*" }
 le = { "<=" }
-eq = { "=" }
+assign = _{ "=" }
 
 // Parentheses.
 lparen = _{ "(" }
 rparen = _{ ")" }
 
 // Syntax.
-prog = { SOI ~ expr ~ EOI }
+let_expr = { let ~ id ~ assign ~ expr ~ in ~ expr }
+if_expr = { if ~ expr ~ then ~ expr ~ else ~ expr }
+binop_expr = { binop ~ expr ~ binop_expr | "" }
 expr = _{
     (
         int
         | true
         | false
-        | let ~ id ~ eq ~ expr ~ in ~ expr
-        | if ~ expr ~ then ~ expr ~ else ~ expr
+        | let_expr
+        | if_expr
         | id
         | lparen ~ expr ~ rparen
-    ) ~ expr2
+    ) ~ binop_expr
 }
-expr2 = _{ binop ~ expr ~ expr2 | "" }
+
+prog = _{ SOI ~ expr ~ EOI }
