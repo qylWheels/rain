@@ -1,5 +1,4 @@
 use crate::ast::{BinOp, Expr};
-use std::collections::HashMap;
 
 #[derive(Clone, Copy, Debug)]
 pub enum InterpretError {
@@ -8,15 +7,11 @@ pub enum InterpretError {
 }
 
 #[derive(Clone, Debug)]
-pub struct Interpreter {
-    dynamic_env: HashMap<String, Expr>,
-}
+pub struct Interpreter;
 
 impl Interpreter {
     pub fn new() -> Self {
-        Interpreter {
-            dynamic_env: HashMap::new(),
-        }
+        Interpreter
     }
 
     pub fn eval(&mut self, expr: &Expr) -> Result<Expr, InterpretError> {
