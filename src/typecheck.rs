@@ -11,7 +11,7 @@ pub enum Type {
 pub enum TypeError {
     UnboundVariable(String),
     IfGuardError(Type),
-    IfBranchError,
+    IfBranchError(Type, Type),
     BinOpError,
 }
 
@@ -70,7 +70,7 @@ impl TypeChecker {
                     let e1_type = self.typecheck(&e1)?;
                     let e2_type = self.typecheck(&e2)?;
                     if e1_type != e2_type {
-                        Err(TypeError::IfBranchError)
+                        Err(TypeError::IfBranchError(e1_type, e2_type))
                     } else {
                         Ok(e1_type)
                     }
