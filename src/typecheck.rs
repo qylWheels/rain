@@ -10,7 +10,7 @@ pub enum Type {
 #[derive(Clone, Debug)]
 pub enum TypeError {
     UnboundVariable(String),
-    IfGuardError,
+    IfGuardError(Type),
     IfBranchError,
     BinOpError,
 }
@@ -65,7 +65,7 @@ impl TypeChecker {
             Expr::If { guard, e1, e2 } => {
                 let guard_type = self.typecheck(&guard)?;
                 if guard_type != Type::Bool {
-                    Err(TypeError::IfGuardError)
+                    Err(TypeError::IfGuardError(guard_type))
                 } else {
                     let e1_type = self.typecheck(&e1)?;
                     let e2_type = self.typecheck(&e2)?;
