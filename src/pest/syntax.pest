@@ -2,9 +2,10 @@ WHITESPACE = _{ WHITE_SPACE }
 
 // Trival lexical elements.
 int = @{ "-"? ~ ASCII_DIGIT+ }
-id = @{ ASCII_ALPHA+ }
+id = @{ !(keywords ~ !ASCII_ALPHA) ~ ASCII_ALPHA+ }
 
 // Keywords.
+keywords = _{ if | then | else | true | false | let | in }
 if = _{ "if" }
 then = _{ "then" }
 else = _{ "else" }
