@@ -7,9 +7,9 @@ pub enum Type {
     Bool,
 }
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Debug)]
 pub enum TypeError {
-    UnboundVariable,
+    UnboundVariable(String),
     IfGuardError,
     IfBranchError,
     BinOpError,
@@ -56,7 +56,7 @@ impl TypeChecker {
             Expr::Var(varname) => Ok(self
                 .type_env
                 .lookup(&varname)
-                .ok_or(TypeError::UnboundVariable)?),
+                .ok_or(TypeError::UnboundVariable(varname))?),
             Expr::Let { x, e1, e2 } => {
                 let e1_type = self.typecheck(&e1)?;
                 self.type_env.extend(&x, e1_type);
