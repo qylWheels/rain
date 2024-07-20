@@ -50,6 +50,15 @@ impl RainParser {
                     }
                 }
                 Rule::binop_expr => Self::parse_expression(primary.into_inner()),
+                Rule::fn_expr => {
+                    let mut inner = primary.into_inner();
+                    let arg = inner.next().unwrap().as_str();
+                    let body = Self::parse_expression(inner.next().unwrap().into_inner());
+                    Expr::Fn {
+                        arg: arg.into(),
+                        body: Box::new(body),
+                    }
+                }
                 Rule::expr => Self::parse_expression(primary.into_inner()),
                 rule => unreachable!("rule = {rule:?}"),
             })
