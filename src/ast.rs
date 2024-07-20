@@ -25,6 +25,10 @@ pub enum Expr {
         e1: Box<Expr>,
         e2: Box<Expr>,
     },
+    Fn {
+        arg: Vec<String>,
+        body: Box<Expr>,
+    },
 }
 
 impl Expr {
