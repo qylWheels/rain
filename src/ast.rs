@@ -26,7 +26,7 @@ pub enum Expr {
         e2: Box<Expr>,
     },
     Fn {
-        arg: Vec<String>,
+        arg: String,
         body: Box<Expr>,
     },
 }
@@ -34,7 +34,7 @@ pub enum Expr {
 impl Expr {
     pub fn is_value(&self) -> bool {
         match self {
-            Expr::Int(_) | Expr::Bool(_) => true,
+            Expr::Int(_) | Expr::Bool(_) | Expr::Fn { arg: _, body: _ } => true,
             _ => false,
         }
     }
