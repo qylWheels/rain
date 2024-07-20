@@ -1,4 +1,5 @@
 use crate::ast::{BinOp, Expr};
+use std::collections::HashSet;
 
 #[derive(Clone, Copy, Debug)]
 pub enum InterpretError {
@@ -22,6 +23,21 @@ impl Interpreter {
             Expr::Let { x, e1, e2 } => self.eval_let(&x, &e1, &e2),
             Expr::If { guard, e1, e2 } => self.eval_if(&guard, &e1, &e2),
             Expr::Bin { op, e1, e2 } => self.eval_bin(op, &e1, &e2),
+            Expr::Fn { arg: _, body: _ } => Ok(expr),
+        }
+    }
+
+    fn freevars(&self, expr: &Expr) -> HashSet<String> {
+        let expr = expr.clone();
+        match expr {
+            Expr::Int(_) | Expr::Bool(_) => HashSet::new(),
+            Expr::Var(x) => [x].into(),
+            Expr::Let { x, e1, e2 } => &self.freevars(&e1) | &(&(self.freevars(&e2)) ^ &[x].into()),
+            Expr::If { guard, e1, e2 } => {
+                &(&self.freevars(&guard) | &self.freevars(&e1)) | &self.freevars(&e2)
+            }
+            Expr::Bin { op: _, e1, e2 } => &self.freevars(&e1) | &self.freevars(&e2),
+            Expr::Fn { arg, body } => &self.freevars(&body) ^ &[arg].into(),
         }
     }
 
@@ -64,6 +80,22 @@ impl Interpreter {
                     e1: Box::new(self.substitute(&e1, &value, varname)?),
                     e2: Box::new(self.substitute(&e2, &value, varname)?),
                 }),
+                Expr::Fn { arg, body } => {
+                    if arg == varname {
+                        Ok(Expr::Fn { arg, body })
+                    } else {
+                        // for now, "value" is always a value, so FV(value) is always {}.
+                        let freevars = self.freevars(&value);
+                        if !freevars.contains(&arg) {
+                            Ok(Expr::Fn {
+                                arg,
+                                body: Box::new(self.substitute(&body, &value, varname)?),
+                            })
+                        } else {
+                            unimplemented!()
+                        }
+                    }
+                }
             },
             false => Err(InterpretError::NotAValue),
         }
