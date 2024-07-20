@@ -6,32 +6,32 @@ id = @{ !(keywords ~ !ASCII_ALPHA) ~ ASCII_ALPHA+ }
 
 // Keywords.
 keywords = _{ if | then | else | true | false | let | in }
-if = _{ "if" }
-then = _{ "then" }
-else = _{ "else" }
-true = { "true" }
-false = { "false" }
-let = _{ "let" }
-in = _{ "in" }
+    if = _{ "if" }
+    then = _{ "then" }
+    else = _{ "else" }
+    true = { "true" }
+    false = { "false" }
+    let = _{ "let" }
+    in = _{ "in" }
+    fn = _{ "fn" }
 
 // Operators.
 binop = _{ plus | times | le }
-plus = { "+" }
-times = { "*" }
-le = { "<=" }
-assign = _{ "=" }
+    plus = { "+" }
+    times = { "*" }
+    le = { "<=" }
+    assign = _{ "=" }
 
 // Parentheses.
 lparen = _{ "(" }
 rparen = _{ ")" }
 
 // Syntax.
-let_expr = { let ~ id ~ assign ~ expr ~ in ~ expr }
-if_expr = { if ~ expr ~ then ~ expr ~ else ~ expr }
-binop_expr = { atom ~ (binop ~ atom)+ }
-atom = _{ int | true | false | let_expr | if_expr | id | lparen ~ expr ~ rparen }
-expr = {
-    binop_expr | atom
-}
+expr = { binop_expr | atom }
+    binop_expr = { atom ~ (binop ~ atom)+ }
+    atom = _{ int | true | false | let_expr | if_expr | fn_expr | id | lparen ~ expr ~ rparen}
+        let_expr = { let ~ id ~ assign ~ expr ~ in ~ expr }
+        if_expr = { if ~ expr ~ then ~ expr ~ else ~ expr }
+        fn_expr = { fn ~ id ~ "->" ~ expr }
 
 prog = _{ SOI ~ expr ~ EOI }
