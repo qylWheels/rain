@@ -29,6 +29,10 @@ pub enum Expr {
         arg: String,
         body: Box<Expr>,
     },
+    Apply {
+        func: Box<Expr>,
+        arg: Box<Expr>,
+    },
 }
 
 impl Expr {

@@ -63,6 +63,20 @@ impl RainParser {
                     }
                     fn_expr
                 }
+                Rule::apply_expr => {
+                    let mut inner = primary.into_inner();
+                    let func = Self::parse_expression(inner.next().unwrap().into_inner());
+                    let args = inner.next().unwrap().into_inner();
+                    let mut apply_expr = func;
+                    for arg in args {
+                        apply_expr = Expr::Apply {
+                            func: Box::new(apply_expr),
+                            arg: Box::new(Self::parse_expression(arg.into_inner())),
+                        }
+                    }
+                    apply_expr
+                }
+                Rule::atom => Self::parse_expression(primary.into_inner()),
                 Rule::expr => Self::parse_expression(primary.into_inner()),
                 rule => unreachable!("rule = {rule:?}"),
             })
