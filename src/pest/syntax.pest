@@ -27,12 +27,14 @@ lparen = _{ "(" }
 rparen = _{ ")" }
 
 // Syntax.
-expr = { binop_expr | atom }
-    binop_expr = { atom ~ (binop ~ atom)+ }
-    atom = _{ int | true | false | let_expr | if_expr | fn_expr | id | lparen ~ expr ~ rparen}
+expr = { binop_expr | apply_expr | atom }
+    binop_expr = { atom ~ (binop ~ expr)+ }
+    apply_expr = { atom ~ "(" ~ args ~ ")" }
+        args = { expr ~ ("," ~ expr)* ~ ","? }
+    atom = { int | true | false | let_expr | if_expr | fn_expr | id | lparen ~ expr ~ rparen}
         let_expr = { let ~ id ~ assign ~ expr ~ in ~ expr }
         if_expr = { if ~ expr ~ then ~ expr ~ else ~ expr }
-        fn_expr = { fn ~ "(" ~ args ~ ")" ~ "->" ~ expr }
-            args = { id ~ ("," ~ id)* ~ ","? }
+        fn_expr = { fn ~ "(" ~ params ~ ")" ~ "->" ~ expr }
+            params = { id ~ ("," ~ id)* ~ ","? }
 
 prog = _{ SOI ~ expr ~ EOI }
