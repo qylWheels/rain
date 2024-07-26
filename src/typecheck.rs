@@ -186,6 +186,22 @@ impl TypeChecker {
                 constraints.extend(c2);
                 Ok((t2, constraints))
             }
+            Expr::Apply { func, arg } => {
+                let fresh = self.type_var_name_generator.next();
+                let (tf, cf) = self.build_constraints(env, func)?;
+                let (ta, ca) = self.build_constraints(env, arg)?;
+                let mut constraints = TypeConstraints::new();
+                constraints.extend(cf);
+                constraints.extend(ca);
+                constraints.extend([(
+                    tf,
+                    MonoType::Fn(
+                        Box::new(ta),
+                        Box::new(MonoType::TypeVariable(fresh.clone())),
+                    ),
+                )]);
+                Ok((MonoType::TypeVariable(fresh.clone()), constraints))
+            }
         }
     }
 
