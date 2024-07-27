@@ -21,9 +21,11 @@ impl Display for MonoType {
                 MonoType::Bool => write!(f, "Bool"),
                 MonoType::TypeVariable(x) => write!(f, "{x}"),
                 MonoType::Fn(i, o) => {
+                    write!(f, "(")?;
                     helper(f, &i)?;
                     write!(f, " -> ")?;
-                    helper(f, &o)
+                    helper(f, &o)?;
+                    write!(f, ")")
                 }
             }
         }
