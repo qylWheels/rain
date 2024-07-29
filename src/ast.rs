@@ -1,3 +1,5 @@
+use std::fmt::{write, Display};
+
 #[derive(Clone, Copy, Debug)]
 pub enum BinOp {
     Plus,
@@ -40,6 +42,18 @@ impl Expr {
         match self {
             Expr::Int(_) | Expr::Bool(_) | Expr::Fn { arg: _, body: _ } => true,
             _ => false,
+        }
+    }
+}
+
+// Only for printing `value`.
+impl Display for Expr {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Expr::Int(i) => write!(f, "{i}"),
+            Expr::Bool(b) => write!(f, "{b}"),
+            Expr::Fn { arg: _, body: _ } => write!(f, "<function>"),
+            other => unreachable!("Expression must be a value, but it is {other:?}"),
         }
     }
 }
