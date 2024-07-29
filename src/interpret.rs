@@ -36,14 +36,19 @@ impl Interpreter {
     }
 
     pub fn eval(&mut self, expr: &Expr) -> Result<Expr, InterpretError> {
-        match expr {
-            Expr::Int(_) | Expr::Bool(_) => Ok(expr.clone()),
-            Expr::Var(x) => Err(InterpretError::UnboundValue(x.clone())),
-            Expr::Let { x, e1, e2 } => self.eval_let(x, e1, e2),
-            Expr::If { guard, e1, e2 } => self.eval_if(guard, e1, e2),
-            Expr::Bin { op, e1, e2 } => self.eval_bin(op.clone(), e1, e2),
-            Expr::Fn { arg: _, body: _ } => Ok(expr.clone()),
-            Expr::Apply { func, arg } => self.eval_apply(func, arg),
+        let result = match expr {
+            Expr::Int(_) | Expr::Bool(_) => expr.clone(),
+            Expr::Var(x) => Err(InterpretError::UnboundValue(x.clone()))?,
+            Expr::Let { x, e1, e2 } => self.eval_let(x, e1, e2)?,
+            Expr::If { guard, e1, e2 } => self.eval_if(guard, e1, e2)?,
+            Expr::Bin { op, e1, e2 } => self.eval_bin(op.clone(), e1, e2)?,
+            Expr::Fn { arg: _, body: _ } => expr.clone(),
+            Expr::Apply { func, arg } => self.eval_apply(func, arg)?,
+        };
+        if !result.is_value() {
+            self.eval(&result)
+        } else {
+            Ok(result)
         }
     }
 
