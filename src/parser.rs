@@ -95,21 +95,4 @@ impl RainParser {
             })
             .parse(pairs)
     }
-
-    // /// Parse expression denoted by Rule::expr,
-    // /// including "let expression" and "if expression" and so on.
-    // pub fn parse_expression(pair: Pair<Rule>) -> Expr {
-    //     let mut inner_expr = pair.into_inner();
-    //     match inner_expr.next().unwrap().as_rule() {
-    //         Rule::let_expr => {
-    //             let inner_expr =
-    //         },
-    //         Rule::if_expr => todo!(),
-    //         Rule::binop_expr => todo!(),
-    //         Rule::int | Rule::r#true | Rule::r#false | Rule::id => {
-    //             Self::parse_basic_expression(pair.into_inner())
-    //         }
-    //         _ => todo!(),
-    //     }
-    // }
 }
